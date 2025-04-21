@@ -1,0 +1,40 @@
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="card p-4 shadow" style="width: 400px">
+    <h3 class="text-center mb-4">Connexion</h3>
+
+    <!-- 🔗 Liaison du formulaire -->
+    <form (ngSubmit)="onLogin()">
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <!-- Liaison Angular avec [(ngModel)] -->
+        <input
+          type="email"
+          class="form-control"
+          name="email"
+          [(ngModel)]="email"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Mot de passe</label>
+        <!-- Liaison Angular avec [(ngModel)] -->
+        <input
+          type="password"
+          class="form-control"
+          name="password"
+          [(ngModel)]="password"
+          required
+        />
+      </div>
+
+      <!-- 🔘 Bouton déclencheur -->
+      <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+
+      <!-- Message d’erreur -->
+      <div *ngIf="errorMessage" class="text-danger mt-3 text-center">
+        {{ errorMessage }}
+      </div>
+    </form>
+  </div>
+</div>

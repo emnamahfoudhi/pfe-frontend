@@ -1,0 +1,8 @@
+.footer {
+  border-top: 20px
+  solid black; /* Ajoute une ligne noire avant le footer */
+}
+
+.footer-heading {
+  color: orange; /* Applique la couleur orange au texte */
+}
