@@ -1,0 +1,105 @@
+/* dashboard-departement.component.css - Version avec couleurs harmonieuses */
+
+/* Container principal - Force la suppression de tout overlay */
+.sidenav-container {
+  background: #ecf0f1 !important;
+  position: relative !important;
+}
+
+/* Sidenav - Couleur principale uniforme */
+mat-sidenav.sidenav {
+  background: #2c3e50 !important;
+  opacity: 1 !important;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.15) !important;
+  z-index: 1000 !important;
+}
+
+/* Suppression de tout backdrop ou overlay */
+.mat-drawer-backdrop,
+.mat-sidenav-backdrop,
+.cdk-overlay-backdrop {
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+/* Contenu principal - Couleur harmonieuse avec le navbar */
+mat-sidenav-content {
+  background: #ecf0f1 !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Toolbar dans le sidenav - Même couleur que le navbar */
+mat-sidenav mat-toolbar[color="primary"] {
+  background: #2c3e50 !important;
+  color: white !important;
+  border-bottom: 1px solid #34495e !important;
+  box-shadow: none !important;
+}
+
+/* Toolbar principal du dashboard - Couleur identique au navbar */
+mat-sidenav-content mat-toolbar[color="primary"] {
+  background: #2c3e50 !important;
+  color: white !important;
+  border-bottom: 1px solid #34495e !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+/* Liste de navigation */
+.mat-nav-list {
+  background: inherit !important;
+  padding: 8px 0 !important;
+}
+
+/* Items de navigation */
+.mat-list-item {
+  background: transparent !important;
+  color: white !important;
+  border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.mat-list-item:hover {
+  background: rgba(255,255,255,0.1) !important;
+}
+
+/* Item actif */
+.active-link {
+  background: rgba(255,255,255,0.2) !important;
+  border-left: 4px solid #3498db !important;
+}
+
+/* Icônes */
+.mat-icon {
+  color: white !important;
+  margin-right: 16px !important;
+}
+
+/* Texte de navigation */
+.nav-text {
+  color: white !important;
+  font-weight: 500 !important;
+}
+
+/* Suppression de tous les overlays globaux */
+body .cdk-overlay-container .cdk-overlay-backdrop {
+  display: none !important;
+}
+
+/* Force la suppression de la transparence sur tous les éléments Material */
+.mat-drawer-container,
+.mat-sidenav-container {
+  background: transparent !important;
+}
+
+.mat-drawer-side {
+  border: none !important;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.15) !important;
+}
+
+/* Contenu de la page */
+.content {
+  padding: 20px !important;
+  background: #f8f9fa !important;
+  min-height: calc(100vh - 64px) !important;
+}

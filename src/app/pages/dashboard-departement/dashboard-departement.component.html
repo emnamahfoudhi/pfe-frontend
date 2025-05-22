@@ -1,1 +1,40 @@
-<p>dashboard-departement works!</p>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav class="sidenav" mode="side" opened
+             [disableClose]="true" style="background:#2c3e50; box-shadow: 2px 0 8px rgba(0,0,0,0.15);"><mat-toolbar color="primary">Chef Département</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item routerLink="absences" routerLinkActive="active-link">
+        <mat-icon>event_busy</mat-icon>
+        <span class="nav-text">Absences</span>
+      </a>
+      <a mat-list-item routerLink="conges" routerLinkActive="active-link">
+        <mat-icon>healing</mat-icon>
+        <span class="nav-text">Congés</span>
+      </a>
+      <a mat-list-item routerLink="paiements" routerLinkActive="active-link">
+        <mat-icon>payment</mat-icon>
+        <span class="nav-text">Paiements</span>
+      </a>
+      <a
+        mat-list-item
+        routerLink="questionnaires"
+        routerLinkActive="active-link"
+      >
+        <mat-icon>assignment</mat-icon>
+        <span class="nav-text">Questionnaires</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <span>Tableau de Bord - Chef Département</span>
+    </mat-toolbar>
+
+
+    <
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

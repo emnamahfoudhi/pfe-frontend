@@ -1,0 +1,50 @@
+ background: #e9ecef !important;
+}
+
+/* Boutons d'action dans la table */
+button[color="primary"] {
+  background: #2c3e50 !important;
+  color: white !important;
+}
+
+button[color="primary"]:hover {
+  background: #34495e !important;
+}
+
+button[color="warn"] {
+  background: #e74c3c !important;
+  color: white !important;
+}
+
+button[color="warn"]:hover {
+  background: #c0392b !important;
+}
+
+/* Spacer pour toolbar */
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* Graphique container */
+canvas {
+  background: white !important;
+  border-radius: 4px !important;
+}
+
+/* Suppression des couleurs Material par défaut */
+.mat-primary {
+  background: #2c3e50 !important;
+}
+
+.mat-accent {
+  background: #3498db !important;
+}
+
+.mat-warn {
+  background: #e74c3c !important;
+}
+
+/* Icônes */
+.mat-icon {
+  color: inherit !important;
+}

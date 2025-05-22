@@ -1,1 +1,68 @@
-/* You can add global styles to this file, and also import other style files */
+/* Ajoutez ces règles dans votre fichier styles.css global */
+
+/* Suppression globale des overlays et backdrops Material */
+.cdk-overlay-backdrop,
+.mat-drawer-backdrop,
+.mat-sidenav-backdrop {
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+  pointer-events: none !important;
+}
+
+/* Force la suppression de la transparence sur les conteneurs Material */
+.mat-drawer-container,
+.mat-sidenav-container {
+  background: #ecf0f1 !important;
+}
+
+/* Palette de couleurs globale pour remplacer le thème indigo-pink */
+:root {
+  --primary-color: #2c3e50;
+  --primary-light: #34495e;
+  --accent-color: #3498db;
+  --accent-light: #2980b9;
+  --background-color: #ecf0f1;
+  --surface-color: #ffffff;
+  --error-color: #e74c3c;
+}
+
+/* Override du thème Material indigo-pink */
+.mat-primary {
+  background-color: var(--primary-color) !important;
+}
+
+.mat-accent {
+  background-color: var(--accent-color) !important;
+}
+
+.mat-warn {
+  background-color: var(--error-color) !important;
+}
+
+/* Suppression des ombres indésirables */
+.mat-elevation-z1,
+.mat-elevation-z2,
+.mat-elevation-z3,
+.mat-elevation-z4 {
+  box-shadow: none !important;
+}
+
+/* Correction pour les sidenavs en mode 'side' */
+.mat-drawer-side {
+  box-shadow: 2px 0 8px rgba(0,0,0,0.15) !important;
+}
+
+/* Suppression complète des overlays CDK */
+.cdk-overlay-container .cdk-overlay-backdrop {
+  display: none !important;
+}
+
+/* Reset des z-index problématiques */
+.mat-sidenav-content {
+  z-index: 1 !important;
+}
+
+.mat-sidenav {
+  z-index: 1000 !important;
+}

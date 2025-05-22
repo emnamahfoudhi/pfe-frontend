@@ -1,8 +1,7 @@
-.footer {
-  border-top: 20px
-  solid black; /* Ajoute une ligne noire avant le footer */
-}
-
-.footer-heading {
-  color: orange; /* Applique la couleur orange au texte */
+/* footer.component.css */
+footer {
+  width: 100%;
+  background-color: #15275a; /* bg-blue-900 */
+  color: white;
+  margin-top: auto; /* Pousse le footer en bas si nécessaire */
 }
