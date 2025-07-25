@@ -10,21 +10,15 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
   const router = inject(Router);
 
   const expectedRoles: string[] = route.data['roles'];
-  let userRole = authService.getUserRole();
+  const userRole = authService.getUserRole(); // Conserve ROLE_
 
-  // Suppression du préfixe ROLE_ si présent
-  userRole = userRole.replace(/^ROLE_/, '');
-
-  console.log('User role (processed):', userRole);
+  console.log('User role:', userRole);
   console.log('Expected roles:', expectedRoles);
 
-  // Vérifier si le rôle de l'utilisateur est parmi les rôles attendus
   if (expectedRoles.includes(userRole)) {
     return true;
   } else {
-    console.error(`Access denied: User role "${userRole}" not in expected roles:`, expectedRoles);
     router.navigate(['/unauthorized']);
     return false;
   }
 };
-

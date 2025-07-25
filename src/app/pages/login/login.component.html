@@ -1,40 +1,48 @@
-<div class="container d-flex justify-content-center align-items-center vh-100">
-  <div class="card p-4 shadow" style="width: 400px">
-    <h3 class="text-center mb-4">Connexion</h3>
+<div class="login-container d-flex justify-content-center align-items-center vh-100 bg-light">
+  <div class="card shadow-lg p-4 rounded-4" style="width: 420px;">
+    <div class="text-center mb-4">
+      <img src="/assets/images/logo.png" alt="Logo" width="80" class="mb-3" />
+      <h3 class="fw-bold">Connexion à votre compte</h3>
+      <p class="text-muted small">Veuillez entrer vos identifiants</p>
+    </div>
 
-    <!-- 🔗 Liaison du formulaire -->
     <form (ngSubmit)="onLogin()">
       <div class="mb-3">
-        <label class="form-label">Email</label>
-        <!-- Liaison Angular avec [(ngModel)] -->
+        <label class="form-label fw-semibold">Adresse Email</label>
         <input
           type="email"
-          class="form-control"
+          class="form-control rounded-3"
           name="email"
           [(ngModel)]="email"
           required
+          placeholder="ex: nom@entreprise.com"
         />
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Mot de passe</label>
-        <!-- Liaison Angular avec [(ngModel)] -->
+        <label class="form-label fw-semibold">Mot de passe</label>
         <input
           type="password"
-          class="form-control"
+          class="form-control rounded-3"
           name="password"
           [(ngModel)]="password"
           required
+          placeholder="••••••••"
         />
       </div>
 
-      <!-- 🔘 Bouton déclencheur -->
-      <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+      <button type="submit" class="btn btn-primary w-100 rounded-3 fw-semibold">
+        🔐 Se connecter
+      </button>
 
-      <!-- Message d’erreur -->
-      <div *ngIf="errorMessage" class="text-danger mt-3 text-center">
+      <div *ngIf="errorMessage" class="text-danger text-center mt-3">
         {{ errorMessage }}
       </div>
     </form>
+
+    <div class="text-center mt-3">
+      <small class="text-muted"> ETAP</small>
+    </div>
   </div>
 </div>
+

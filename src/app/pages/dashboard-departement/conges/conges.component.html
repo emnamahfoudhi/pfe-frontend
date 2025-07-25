@@ -1,1 +1,355 @@
-<p>conges works!</p>
+<div class="conge-dashboard">
+  <div class="dashboard-container">
+    <mat-toolbar class="dashboard-toolbar">
+      <span>Gestion des Congés</span>
+      <span class="spacer"></span>
+      <button mat-raised-button color="accent" (click)="onAddCongeClick()">
+        <mat-icon>add</mat-icon> Ajouter Congé
+      </button>
+    </mat-toolbar>
+
+    <div class="dashboard-content">
+      <!-- Formulaire d'ajout -->
+      <mat-card class="form-card" *ngIf="open">
+        <mat-card-header>
+          <mat-card-title>Ajouter un Congé</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="CongeForm" (ngSubmit)="addConge()">
+            <div class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>Date Début</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker1"
+                  formControlName="date_debut"
+                  required
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker1"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Date Fin</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker2"
+                  formControlName="date_fin"
+                  required
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker2"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Jours Utilisés</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="jours_utilises"
+                  required
+                />
+              </mat-form-field>
+
+              <!-- Champ fichier dans le formulaire -->
+              <!-- Remplacer votre champ fichier par : -->
+              <div class="file-upload-container">
+                <label>Justificatif Médical (PDF)</label>
+                <input
+                  #fileInput
+                  type="file"
+                  accept=".pdf"
+                  (change)="onFileSelected($event)"
+                  style="display: none"
+                />
+                <button
+                  mat-stroked-button
+                  type="button"
+                  (click)="fileInput.click()"
+                >
+                  <mat-icon>cloud_upload</mat-icon> Choisir fichier
+                </button>
+                <div class="file-info" *ngIf="selectedFile">
+                  <mat-icon>description</mat-icon>
+                  <span class="file-name">{{ selectedFile.name }}</span>
+                  <span class="file-size"
+                    >({{ getFileSize(selectedFile.size) }})</span
+                  >
+                </div>
+              </div>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Dépassement</mat-label>
+                <mat-select formControlName="depassement">
+                  <mat-option [value]="true">Oui</mat-option>
+                  <mat-option [value]="false">Non</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Statut</mat-label>
+                <mat-select formControlName="statut">
+                  <mat-option value="EN_ATTENTE">En attente</mat-option>
+                  <mat-option value="APPROUVE">Approuvé</mat-option>
+                  <mat-option value="REFUSE">Refusé</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Date Ajout</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker3"
+                  formControlName="date_ajout"
+                  required
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker3"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker3></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Utilisateur</mat-label>
+                <mat-select formControlName="userId" required>
+                  <mat-option *ngFor="let user of users" [value]="user.id">
+                    {{ user.name }} {{ user.surname }} ({{ user.cin }})
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="form-actions">
+              <button
+                mat-raised-button
+                color="primary"
+                [disabled]="!CongeForm.valid"
+              >
+                Ajouter
+              </button>
+              <button mat-button (click)="open = false">Annuler</button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Liste des Congés -->
+      <mat-card class="data-card">
+        <mat-card-header>
+          <mat-card-title>Liste des Congés</mat-card-title>
+          <mat-card-subtitle
+            >Historique complet des congés enregistrés</mat-card-subtitle
+          >
+        </mat-card-header>
+        <mat-card-content>
+          <div class="table-responsive">
+            <table mat-table [dataSource]="conges" class="mat-elevation-z1">
+              <ng-container matColumnDef="dateDebut">
+                <th mat-header-cell *matHeaderCellDef>Date Début</th>
+                <td mat-cell *matCellDef="let conge">
+                  {{ conge.date_debut | date : "dd/MM/yyyy" }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dateFin">
+                <th mat-header-cell *matHeaderCellDef>Date Fin</th>
+                <td mat-cell *matCellDef="let conge">
+                  {{ conge.date_fin | date : "dd/MM/yyyy" }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="jours_utilises">
+                <th mat-header-cell *matHeaderCellDef>Jours Utilisés</th>
+                <td mat-cell *matCellDef="let conge">
+                  {{ conge.jours_utilises }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="statut">
+                <th mat-header-cell *matHeaderCellDef>Statut</th>
+                <td mat-cell *matCellDef="let conge">
+                  <span
+                    [ngClass]="{
+                      'status-pending': conge.statut === 'EN_ATTENTE',
+                      'status-approved': conge.statut === 'APPROUVE',
+                      'status-rejected': conge.statut === 'REFUSE'
+                    }"
+                  >
+                    {{ conge.statut }}
+                  </span>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="justificatif">
+                <!-- Nom corrigé -->
+                <th mat-header-cell *matHeaderCellDef>Justificatif</th>
+                <td mat-cell *matCellDef="let conge">
+  <button *ngIf="conge.fileName"
+          mat-stroked-button
+          (click)="downloadFile(conge.id, conge.fileName)">
+    <mat-icon>description</mat-icon> {{ conge.fileName }}
+  </button>
+</td>
+              </ng-container>
+
+              <ng-container matColumnDef="dateAjout">
+                <th mat-header-cell *matHeaderCellDef>Date Ajout</th>
+                <td mat-cell *matCellDef="let conge">
+                  {{ conge.date_ajout | date : "dd/MM/yyyy" }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let conge">
+                  <div class="action-buttons">
+                    <button
+                      mat-icon-button
+                      color="primary"
+                      (click)="openUserDetailsDialog(conge.user)"
+                      matTooltip="Détails utilisateur"
+                    >
+                      <mat-icon>person</mat-icon>
+                    </button>
+                    <button
+                      mat-icon-button
+                      color="accent"
+                      (click)="selectConge(conge)"
+                      matTooltip="Modifier"
+                    >
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      (click)="deleteConge(conge.id)"
+                      matTooltip="Supprimer"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Formulaire de modification -->
+      <mat-card class="form-card" *ngIf="selectedConge">
+        <mat-card-header>
+          <mat-card-title>Modifier un Congé</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="CongeForm" (ngSubmit)="updateConge(selectedConge)">
+            <div class="form-grid">
+              <!-- Même champs que l'ajout -->
+              <!-- Réutilisation -->
+              <!-- Date Début -->
+              <mat-form-field appearance="outline">
+                <mat-label>Date Début</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker4"
+                  formControlName="date_debut"
+                  required
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker4"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker4></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Date Fin</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker5"
+                  formControlName="date_fin"
+                  required
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker5"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker5></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Jours Utilisés</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="jours_utilises"
+                  required
+                />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Justificatif (PDF)</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  formControlName="justificationPDF"
+                />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Dépassement</mat-label>
+                <mat-select formControlName="depassement">
+                  <mat-option [value]="true">Oui</mat-option>
+                  <mat-option [value]="false">Non</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Statut</mat-label>
+                <mat-select formControlName="statut">
+                  <mat-option value="EN_ATTENTE">En attente</mat-option>
+                  <mat-option value="APPROUVE">Approuvé</mat-option>
+                  <mat-option value="REFUSE">Refusé</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Date Ajout</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker6"
+                  formControlName="date_ajout"
+                  required
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker6"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker6></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div class="form-actions">
+              <button
+                mat-raised-button
+                color="primary"
+                [disabled]="!CongeForm.valid"
+              >
+                Modifier
+              </button>
+              <button mat-button (click)="selectedConge = null">Annuler</button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

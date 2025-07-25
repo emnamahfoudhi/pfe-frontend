@@ -1,9 +1,5 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './pages/login/login.component';
-import { HomeComponent } from './pages/home/home.component';
 import { authGuard } from './guards/auth.guard';
-import { DashboardDepartementComponent } from './pages/dashboard-departement/dashboard-departement.component';
-import { roleGuard } from './guards/role.guard';
 
 export const appRoutes: Routes = [
   {
@@ -17,14 +13,14 @@ export const appRoutes: Routes = [
   {
     path: 'dashboard-dg',
     loadComponent: () => import('./pages/dashboard-dg/dashboard-dg.component').then(m => m.DashboardDgComponent),
-    canActivate: [authGuard, roleGuard],
+    canActivate: [authGuard],
     data: { roles: ['Directeur_General'] }
   },
   {
     path: 'dashboard-departement',
     loadComponent: () => import('./pages/dashboard-departement/dashboard-departement.component').then(m => m.DashboardDepartementComponent),
-    canActivate: [authGuard, roleGuard],
-    data: { roles: ['Chef_Departement'] },
+    canActivate: [authGuard],
+    data: { roles: ['Chef_Departement'] }, // Retiré le préfixe ROLE_
     children: [
       {
         path: 'absences',
@@ -60,20 +56,19 @@ export const appRoutes: Routes = [
   {
     path: 'dashboard-service',
     loadComponent: () => import('./pages/dashboard-service/dashboard-service.component').then(m => m.DashboardServiceComponent),
-    canActivate: [authGuard, roleGuard],
+    canActivate: [authGuard],
     data: { roles: ['Chef_Service'] }
   },
   {
     path: 'dashboard-employe',
     loadComponent: () => import('./pages/dashboard-employe/dashboard-employe.component').then(m => m.DashboardEmployeComponent),
-    canActivate: [authGuard, roleGuard],
+    canActivate: [authGuard],
     data: { roles: ['EMPLOYE'] }
   },
   {
     path: 'unauthorized',
     loadComponent: () => import('./pages/unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent)
   },
-  // Route par défaut si aucune des routes ci-dessus ne correspond
   {
     path: '**',
     redirectTo: 'unauthorized'

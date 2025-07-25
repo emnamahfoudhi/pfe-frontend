@@ -1,25 +1,28 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import { CanActivateFn, Router, ActivatedRouteSnapshot } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  const token = authService.getToken();
-  const expectedRoles = route.data?.['roles'] as string[] || [];
-
-  if (!token) {
+  // Vérifier si l'utilisateur est authentifié
+  if (!authService.isAuthenticated()) {
+    console.log('User not authenticated, redirecting to login');
     router.navigate(['/login']);
     return false;
   }
 
-  const userRoles = authService.getUserRole();
-  const hasRole = expectedRoles.length === 0 || expectedRoles.some(role => userRoles.includes(role));
+  // Vérifier les rôles si spécifiés
+  const expectedRoles = route.data?.['roles'] as string[];
+  if (expectedRoles && expectedRoles.length > 0) {
+    const hasRequiredRole = authService.hasAnyRole(expectedRoles);
 
-  if (!hasRole) {
-    router.navigate(['/unauthorized']);
-    return false;
+    if (!hasRequiredRole) {
+      console.log('User does not have required role, redirecting to unauthorized');
+      router.navigate(['/unauthorized']);
+      return false;
+    }
   }
 
   return true;

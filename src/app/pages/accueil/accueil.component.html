@@ -49,14 +49,7 @@
               <li class="nav-item">
                 <a class="nav-link" href="#about" fragment="about">À propos</a>
               </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  href="#recent-events"
-                  fragment="recent-events"
-                  >Événements récents</a
-                >
-              </li>
+             
               <li class="nav-item">
                 <a class="nav-link" href="#contact" fragment="contact"
                   >Contact</a
@@ -148,112 +141,7 @@
 
   <section id="about" class="d-none">
     <div class="container text-center">
-      <!--
-      <h2 class="mb-4">À propos de SofEvent</h2>
-      <p class="lead">
-        <strong>SofEvent</strong> est la plateforme utilisée par
-        <strong>Sofrecom</strong> pour organiser, gérer et suivre tous ses
-        événements.
-      </p>
-      <p>
-        De la planification à la participation, SofEvent simplifie chaque étape
-        pour offrir une expérience fluide et efficace.
-      </p>
-      <div class="mt-4">
-        <a href="#recent-events" class="btn btn-primary btn-lg"
-          >Voir les événements récents</a
-        >
-      </div>
-    </div>
-  </section>
 
-  <section
-    id="recent-events"
-    class="vh-100 d-flex align-items-center justify-content-center bg-light"
-  >
-    <div class="container text-center">
-      <h2 class="text-center mb-4">Événements récents</h2>
-      <div class="events-carousel-wrapper">
-        <div class="events-carousel">
-
-          <div
-            *ngFor="let event of events"
-            class="event-card"
-            (click)="openModal(event)"
-          >
-            <div class="event-circle align-items-start">
-              <img [src]="event.image" alt="Event Image" class="event-image" />
-            </div>
-            <div class="event-description">
-              <h5>{{ event.title }}</h5>
-              <p>{{ event.description }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="eventModal" class="modal" *ngIf="selectedEvent">
-        <div class="modal-content">
-          <span class="close" (click)="closeModal()">&times;</span>
-          <h2>{{ selectedEvent.title }}</h2>
-          <p>{{ selectedEvent.description }}</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section
-    id="contact"
-    class="py-5 vh-100 bg-light d-flex align-items-center justify-content-center bg-light"
-  >
-    <div class="container h-100 d-flex flex-column justify-content-center">
-
-      <h2 class="text-center mb-4">Contactez-nous</h2>
-
-
-      <p class="text-center mb-4">
-        Vous avez des questions ? N'hésitez pas à nous contacter en remplissant
-        le formulaire ci-dessous, ou en utilisant nos coordonnées.
-      </p>
-      <form>
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label for="name" class="form-label">Nom complet</label>
-            <input
-              type="text"
-              class="form-control"
-              id="name"
-              placeholder="Votre nom complet"
-              required
-            />
-          </div>
-          <div class="col-md-6 mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input
-              type="email"
-              class="form-control"
-              id="email"
-              placeholder="Votre email"
-              required
-            />
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="message" class="form-label">Message</label>
-          <textarea
-            class="form-control"
-            id="message"
-            rows="4"
-            placeholder="Écrivez votre message ici..."
-            required
-          ></textarea>
-        </div>
-
-        <div class="text-center">
-          <button type="submit" class="btn btn-primary btn-lg">Envoyer</button>
-        </div>
-      </form> -->
     </div>
   </section>
 </div>

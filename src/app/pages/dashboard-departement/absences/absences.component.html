@@ -1,61 +1,279 @@
-<mat-toolbar color="primary">
-  <span>📊 Absences - Statistiques</span>
-  <span class="spacer"></span>
-  <button mat-raised-button color="accent" (click)="ajouterAbsence()">
-    <mat-icon>add</mat-icon> Ajouter
-  </button>
-</mat-toolbar>
+<div class="absence-dashboard">
+  <div class="dashboard-container">
+    <mat-toolbar class="dashboard-toolbar">
+      <span>Gestion des Absences</span>
+      <span class="spacer"></span>
+      <button mat-raised-button color="accent" (click)="onAddAbsenceClick()">
+        <mat-icon>add</mat-icon> Ajouter Absence
+      </button>
+    </mat-toolbar>
 
-<div class="dashboard-container">
-  <mat-card class="card-with-chart">
-    <mat-card-title>Liste des absences</mat-card-title>
-    <div class="table-container">
-      <table mat-table [dataSource]="absences" class="mat-elevation-z8 full-width-table">
-        <!-- Colonnes ici -->
-          <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef> ID </th>
-            <td mat-cell *matCellDef="let a"> {{a.id}} </td>
-          </ng-container>
-          <ng-container matColumnDef="dataeabsence">
-            <th mat-header-cell *matHeaderCellDef> Date </th>
-            <td mat-cell *matCellDef="let a"> {{a.dataeabsence}} </td>
-          </ng-container>
-          <ng-container matColumnDef="raison_absence">
-            <th mat-header-cell *matHeaderCellDef> Raison </th>
-            <td mat-cell *matCellDef="let a"> {{a.raison_absence}} </td>
-          </ng-container>
-          <ng-container matColumnDef="statut">
-            <th mat-header-cell *matHeaderCellDef> Statut </th>
-            <td mat-cell *matCellDef="let a"> {{a.statut}} </td>
-          </ng-container>
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef> Actions </th>
-            <td mat-cell *matCellDef="let a">
-              <button mat-icon-button color="primary" (click)="modifierAbsence(a)">
-                <mat-icon>edit</mat-icon>
+    <div class="dashboard-content">
+      <!-- Formulaire d'ajout -->
+      <mat-card class="form-card" *ngIf="open">
+        <mat-card-header>
+          <mat-card-title>Ajouter une Absence</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="AbsenceForm" (ngSubmit)="addAbsence()">
+            <div class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>Date Absence</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker1"
+                  formControlName="dataeabsence"
+                  required
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker1"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Raison</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  formControlName="raison_absence"
+                  required
+                />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Statut</mat-label>
+                <!-- Afficher le statut en lecture seule -->
+                <input matInput formControlName="statut" readonly />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Date Ajout</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker2"
+                  formControlName="dateAjout"
+                  required
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker2"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
+              <!-- Dans le formulaire d'ajout -->
+              <!-- Supprimez [(ngModel)]="selectedUserId" -->
+              <!-- Supprimez [(ngModel)]="selectedUserId" -->
+              <mat-form-field appearance="outline">
+                <mat-label>Utilisateur</mat-label>
+                <mat-select formControlName="userId" required>
+                  <mat-option *ngFor="let user of users" [value]="user.id">
+                    {{ user.name }} {{ user.surname }} ({{ user.cin }})
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="form-actions">
+              <button
+                mat-raised-button
+                color="primary"
+                [disabled]="!AbsenceForm.valid"
+              >
+                Ajouter
               </button>
-              <button mat-icon-button color="warn" (click)="supprimerAbsence(a.id)">
-                <mat-icon>delete</mat-icon>
+              <button mat-button (click)="open = false">Annuler</button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Liste des absences -->
+      <mat-card class="data-card">
+        <mat-card-header>
+          <mat-card-title>Liste des Absences</mat-card-title>
+          <mat-card-subtitle
+            >Historique complet des absences enregistrées</mat-card-subtitle
+          >
+        </mat-card-header>
+        <mat-card-content>
+          <div class="table-responsive">
+            <table mat-table [dataSource]="absences" class="mat-elevation-z1">
+              <ng-container matColumnDef="dateAbsence">
+                <th mat-header-cell *matHeaderCellDef>Date Absence</th>
+                <td mat-cell *matCellDef="let absence">
+                  {{ absence.dataeabsence | date : "dd/MM/yyyy" }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="raison">
+                <th mat-header-cell *matHeaderCellDef>Raison</th>
+                <td mat-cell *matCellDef="let absence">
+                  {{ absence.raison_absence }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="statut">
+                <th mat-header-cell *matHeaderCellDef>Statut</th>
+                <td mat-cell *matCellDef="let absence">
+                  <span
+                    [ngClass]="{
+                      'status-pending': absence.statut === 'EN_ATTENTE',
+                      'status-approved': absence.statut === 'JUSTIFIEE',
+                      'status-rejected': absence.statut === 'NON_JUSTIFIEE'
+                    }"
+                  >
+                    {{ absence.statut }}
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dateAjout">
+                <th mat-header-cell *matHeaderCellDef>Date Ajout</th>
+                <td mat-cell *matCellDef="let absence">
+                  {{ absence.dateAjout | date : "dd/MM/yyyy" }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let absence">
+                  <div class="action-buttons">
+                    <button
+                      mat-icon-button
+                      color="primary"
+                      (click)="openUserDetailsDialog(absence.user)"
+                      matTooltip="Détails utilisateur"
+                    >
+                      <mat-icon>person</mat-icon>
+                    </button>
+                    <button
+                      mat-icon-button
+                      color="accent"
+                      (click)="selectAbsence(absence)"
+                      matTooltip="Modifier"
+                    >
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      (click)="deleteAbsence(absence.id)"
+                      matTooltip="Supprimer"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr
+                mat-header-row
+                *matHeaderRowDef="[
+                  'dateAbsence',
+                  'raison',
+                  'statut',
+                  'dateAjout',
+                  'actions'
+                ]"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="
+                  let row;
+                  columns: [
+                    'dateAbsence',
+                    'raison',
+                    'statut',
+                    'dateAjout',
+                    'actions'
+                  ]
+                "
+              ></tr>
+            </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Formulaire de modification -->
+      <mat-card class="form-card" *ngIf="selectedabsence">
+        <mat-card-header>
+          <mat-card-title>
+            {{ selectedabsence ? "Modifier Absence" : "Ajouter une Absence" }}
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form
+            [formGroup]="AbsenceForm"
+            (ngSubmit)="
+              selectedabsence ? updateAbsence(selectedabsence) : addAbsence()
+            "
+          >
+            <div class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>Date Absence</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker1"
+                  formControlName="dataeabsence"
+                  required
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker1"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Raison</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  formControlName="raison_absence"
+                  required
+                />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Statut</mat-label>
+                <mat-select formControlName="statut" required>
+                  <mat-option value="EN_ATTENTE">En attente</mat-option>
+                  <mat-option value="JUSTIFIEE">Justifiée</mat-option>
+                  <mat-option value="NON_JUSTIFIEE">Non justifiée</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Date Ajout</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker2"
+                  formControlName="dateAjout"
+                  required
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker2"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div class="form-actions">
+              <button
+                mat-raised-button
+                color="primary"
+                [disabled]="!AbsenceForm.valid"
+              >
+                {{ selectedabsence ? "Modifier" : "Ajouter" }}
               </button>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-
-      </table>
+              <button mat-button (click)="selectedabsence = null">
+                Annuler
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
     </div>
-  </mat-card>
-
-  <mat-card class="card-with-chart">
-    <mat-card-title>Courbe des absences</mat-card-title>
-    <canvas baseChart
-            [data]="chartData"
-            [type]="'bar'"
-            [options]="chartOptions">
-    </canvas>
-  </mat-card>
+  </div>
 </div>
-
-
